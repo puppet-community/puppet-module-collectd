@@ -3,6 +3,10 @@
     "input_method": "stdin",
     "files": ["python_task_helper/files/task_helper.py"],
     "parameters": {
+      "hostname": {
+        "description": "Hostname of metric, as configured with Hostname in collectd",
+        "type": "Optional[String[1]]"
+      },
       "metric": {
         "description": "Name of metric, e.g. load/load-relative",
         "type": "String[1]"

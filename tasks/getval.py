@@ -8,11 +8,24 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'python_task
 from task_helper import TaskHelper
 
 
-HOSTNAME = socket.gethostname()
 class GetVal(TaskHelper):
+    def get_metric(self, hostname, metric):
+        fullmetric = hostname+'/'+metric
+        return subprocess.check_output(['/usr/bin/collectdctl', 'getval',fullmetric]).rstrip().decode().split('\n')
+
     def task(self, args):
-        fullmetric = HOSTNAME+'/'+args['metric']
-        results = subprocess.check_output(['/usr/bin/collectdctl', 'getval',fullmetric]).rstrip().decode().split('\n')
+        if 'hostname' in args:
+            hosts = [args['hostname']]
+        else:
+            hosts = [socket.gethostname(), socket.getfqdn()]
+
+        for host in hosts:
+            try:
+                results = self.get_metric(host, args['metric'])
+                break
+            except:
+                continue
+
         values = { k:v for k,v in (x.split('=')  for x in results)}
         return {
                   'metric': args['metric'],
