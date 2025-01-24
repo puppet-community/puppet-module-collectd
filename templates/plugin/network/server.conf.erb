@@ -1,6 +1,6 @@
 <Plugin network>
 <% if scope.lookupvar('collectd::collectd_version_real') and (scope.function_versioncmp([scope.lookupvar('collectd::collectd_version_real'), '4.7']) >= 0) -%>
-  <Server "<%= @name %>" "<%= @port %>">
+  <Server "<%= @hostname %>" "<%= @port %>">
 <% if @securitylevel -%>
     SecurityLevel "<%= @securitylevel %>"
 <% end -%>

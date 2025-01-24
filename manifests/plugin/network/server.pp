@@ -1,6 +1,8 @@
 #
+# @param hostname The hostname of the server to connect to
 define collectd::plugin::network::server (
   Enum['present', 'absent'] $ensure                         = 'present',
+  String[1] $hostname                                       = $name,
   Optional[String] $username                                = undef,
   Optional[String] $password                                = undef,
   Optional[Stdlib::Port] $port                              = undef,

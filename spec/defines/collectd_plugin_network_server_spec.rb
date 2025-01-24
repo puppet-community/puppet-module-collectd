@@ -14,6 +14,7 @@ describe 'collectd::plugin::network::server', type: :define do
         let(:title) { 'node1' }
         let :params do
           {
+            hostname: 'node1.example.com',
             port: 1234,
             interface: 'eth0',
             securitylevel: 'Encrypt',
@@ -26,7 +27,7 @@ describe 'collectd::plugin::network::server', type: :define do
           is_expected.to contain_file("#{options[:plugin_conf_dir]}/network-server-node1.conf").with(
             ensure: 'present',
             path: "#{options[:plugin_conf_dir]}/network-server-node1.conf",
-            content: "<Plugin network>\n  <Server \"node1\" \"1234\">\n    SecurityLevel \"Encrypt\"\n    Username \"foo\"\n    Password \"bar\"\n    Interface \"eth0\"\n\n  </Server>\n</Plugin>\n"
+            content: "<Plugin network>\n  <Server \"node1.example.com\" \"1234\">\n    SecurityLevel \"Encrypt\"\n    Username \"foo\"\n    Password \"bar\"\n    Interface \"eth0\"\n\n  </Server>\n</Plugin>\n"
           )
         end
       end
