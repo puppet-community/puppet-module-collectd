@@ -16,14 +16,3 @@ def os_specific_options(facts)
     { package: 'collectd', service: 'collectd', plugin_conf_dir: '/etc/collectd' }
   end
 end
-
-def baseline_os_hash
-  {
-    supported_os: [
-      {
-        'operatingsystem' => 'CentOS',
-        'operatingsystemrelease' => %w[9]
-      }
-    ]
-  }
-end

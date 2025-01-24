@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe 'collectd::plugin::ovs_events', type: :class do
-  on_supported_os(baseline_os_hash).each do |os, facts|
+  on_supported_os.each do |os, facts|
     context "on #{os}" do
       let :facts do
         facts

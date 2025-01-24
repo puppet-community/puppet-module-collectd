@@ -6,7 +6,7 @@ describe 'collectd::plugin::write_prometheus', type: :class do
   ip = '192.0.0.1'
   port = 9103
   host_opt_min_collectd_ver = '5.9'
-  on_supported_os(baseline_os_hash).each do |os, facts|
+  on_supported_os.each do |os, facts|
     context "on #{os}" do
       let :facts do
         facts.merge(collectd_version: '5.7')

@@ -7,17 +7,20 @@ describe 'collectd::plugin::nut', type: :class do
     'include collectd'
   end
 
-  on_supported_os(baseline_os_hash).each do |os, facts|
+  on_supported_os.each do |os, os_facts|
     context "on #{os}" do
+      options = os_specific_options(os_facts)
       let :facts do
-        facts
+        os_facts
       end
+      let(:config_filename) { "#{options[:plugin_conf_dir]}/10-nut.conf" }
+      let(:config_filename2) { "#{options[:plugin_conf_dir]}/nut-ups-ups1@localhost.conf" }
 
       context ':ensure => present, default params' do
-        it 'Will create /etc/collectd.d/10-nut.conf' do
+        it 'Will create 10-nut.conf' do
           is_expected.to contain_file('nut.load').
             with(ensure: 'present',
-                 path: '/etc/collectd.d/10-nut.conf',
+                 path: config_filename,
                  content: %r{LoadPlugin nut})
         end
       end
@@ -27,10 +30,10 @@ describe 'collectd::plugin::nut', type: :class do
           { upss: ['ups1@localhost'] }
         end
 
-        it 'Will create /etc/collectd.d/nut-ups-ups1@localhost.conf' do
-          is_expected.to contain_file('/etc/collectd.d/nut-ups-ups1@localhost.conf').
+        it 'Will create localhost.conf' do
+          is_expected.to contain_file(config_filename2).
             with(ensure: 'present',
-                 path: '/etc/collectd.d/nut-ups-ups1@localhost.conf',
+                 path: config_filename2,
                  content: %r{UPS "ups1@localhost"})
         end
       end

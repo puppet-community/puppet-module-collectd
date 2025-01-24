@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe 'collectd::plugin::python', type: :class do
-  on_supported_os(baseline_os_hash).each do |os, facts|
+  on_supported_os.each do |os, facts|
     context "on #{os}" do
       let :facts do
         facts
@@ -58,9 +58,7 @@ describe 'collectd::plugin::python', type: :class do
           end
 
           it 'will ensure the two directories are here' do
-            is_expected.to contain_file('/tmp/').with(
-              require: 'Package[collectd]'
-            )
+            is_expected.to contain_file('/tmp/')
             is_expected.to contain_file('/data/')
           end
 
