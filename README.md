@@ -153,6 +153,7 @@ documentation for each plugin for configurable attributes.
 * `memcached`(see [collectd::plugin::memcached](#class-collectdpluginmemcached)
   below )
 * `memory`(see [collectd::plugin::memory](#class-collectdpluginmemory) below )
+* `modbus` (see [collectd::plugin::modbus](#class-collectdpluginmodbus) below)
 * `mongodb`(see [collectd::plugin::mongodb](#class-collectdpluginmongodb) below )
 * `mysql` (see [collectd::plugin::mysql](#class-collectdpluginmysql) below)
 * `netlink` (see [collectd::plugin::netlink](#class-collectdpluginnetlink) below)
@@ -1070,6 +1071,35 @@ class { 'collectd::plugin::memcached':
 
 ```puppet
 class { 'collectd::plugin::memory':
+}
+```
+
+#### Class: `collectd::plugin::modbus`
+
+```puppet
+class {'collectd::plugin::modbus':
+  ensure => 'present',
+  data   =>  {
+    current_phase_a => {
+      'type'          => 'gauge',
+      'instance'      => 'current phase A',
+      'register_base' => 1234,
+      'register_type' => 'Float',
+    }
+  },
+  hosts  => {
+    meter123 => {
+      'address'   => '127.0.0.1',
+      'port'      => 502,
+      'interval'  => 10,
+      'slaves'    => {
+        255 => {
+          'instance' => 'power meter 255',
+          'collect'  => ['current_phase_a'],
+        }
+      },
+    }
+  },
 }
 ```
 

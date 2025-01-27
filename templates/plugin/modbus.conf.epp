@@ -1,0 +1,52 @@
+<%- |
+  Hash[String[1], Collectd::Modbus::Host] $hosts = {},
+  Hash[String[1], Collectd::Modbus::Data] $data = {},
+| -%>
+<% if $data or $hosts { -%>
+<Plugin modbus>
+<%   $data.keys.sort.each |String $key| {
+       $val = $data[$key] -%>
+  <Data "<%= $key %>">
+    Type "<%= $val['type'] %>"
+<%   if $val['instance'] { -%>
+    Instance "<%= $val['instance'] %>"
+<%   } -%>
+<%   if $val['register_base'] { -%>
+    RegisterBase <%= $val['register_base'] %>
+<%   } -%>
+<%   if $val['register_type'] { -%>
+    RegisterType <%= $val['register_type'] %>
+<%   } -%>
+<%   if $val['register_cmd'] { -%>
+    RegisterCmd <%= $val['register_cmd'] %>
+<%   } -%>
+  </Data>
+<% } -%>
+<% $hosts.keys.sort.each |String $key| {
+     $val = $hosts[$key] -%>
+  <Host "<%= $key %>">
+    Address "<%= $val['address'] %>"
+<%   if $val['port'] { -%>
+    Port <%= $val['port'] %>
+<%   } -%>
+<%   if $val['interval'] { -%>
+    Interval <%= $val['interval'] %>
+<%   } -%>
+<%   if $val['slaves'] {
+       $val['slaves'].keys.sort.each |$slave_key| {
+         $slave_val = $val['slaves'][$slave_key]
+-%>
+    <Slave <%= $slave_key %>>
+<%       if $slave_val['instance'] { -%>
+      Instance "<%= $slave_val['instance'] %>"
+<%       } -%>
+<%      $slave_val['collect'].sort.each |String $data_name| { -%>
+      Collect "<%= $data_name %>"
+<%     } -%>
+    </Slave>
+<%   } -%>
+<% } -%>
+  </Host>
+<% } -%>
+</Plugin>
+<% } -%>

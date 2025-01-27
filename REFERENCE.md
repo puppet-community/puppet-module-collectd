@@ -60,6 +60,7 @@
 * [`collectd::plugin::mcelog`](#collectd--plugin--mcelog): https://collectd.org/documentation/manpages/collectd.conf.5.shtml#plugin_mcelog
 * [`collectd::plugin::memcached`](#collectd--plugin--memcached): https://collectd.org/wiki/index.php/Plugin:memcached
 * [`collectd::plugin::memory`](#collectd--plugin--memory): https://collectd.org/wiki/index.php/Plugin:Memory
+* [`collectd::plugin::modbus`](#collectd--plugin--modbus): Install and configure the modbus plugin
 * [`collectd::plugin::mongodb`](#collectd--plugin--mongodb): Class: collectd::plugin::mongodb
 * [`collectd::plugin::mysql`](#collectd--plugin--mysql): MySQL plugin https://collectd.org/wiki/index.php/Plugin:MySQL
 * [`collectd::plugin::netlink`](#collectd--plugin--netlink): https://collectd.org/wiki/index.php/Plugin:Netlink
@@ -188,6 +189,9 @@
 * [`Collectd::LOGPARSER::Message`](#Collectd--LOGPARSER--Message): https://wiki.opnfv.org/display/fastpath/Logparser+plugin+HLD
 * [`Collectd::MCELOG::Memory`](#Collectd--MCELOG--Memory): https://collectd.org/documentation/manpages/collectd.conf.5.shtml#plugin_mcelog
 * [`Collectd::Manifests::Init`](#Collectd--Manifests--Init)
+* [`Collectd::Modbus::Data`](#Collectd--Modbus--Data): represents a modbus data entry
+* [`Collectd::Modbus::Host`](#Collectd--Modbus--Host): represents a modbus host entry
+* [`Collectd::Modbus::Slave`](#Collectd--Modbus--Slave): Represents a modbus host's slave entry
 * [`Collectd::Network::SecurityLevel`](#Collectd--Network--SecurityLevel)
 * [`Collectd::Redis::Node`](#Collectd--Redis--Node)
 * [`Collectd::SNMP::AuthProtocol`](#Collectd--SNMP--AuthProtocol)
@@ -3590,6 +3594,54 @@ Data type: `Any`
 
 
 Default value: `undef`
+
+### <a name="collectd--plugin--modbus"></a>`collectd::plugin::modbus`
+
+Install and configure the modbus plugin
+
+* **See also**
+  * https://collectd.org/wiki/index.php/Plugin:Modbus
+
+#### Parameters
+
+The following parameters are available in the `collectd::plugin::modbus` class:
+
+* [`ensure`](#-collectd--plugin--modbus--ensure)
+* [`manage_package`](#-collectd--plugin--modbus--manage_package)
+* [`data`](#-collectd--plugin--modbus--data)
+* [`hosts`](#-collectd--plugin--modbus--hosts)
+
+##### <a name="-collectd--plugin--modbus--ensure"></a>`ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Enable/Disable modbus support
+
+Default value: `'present'`
+
+##### <a name="-collectd--plugin--modbus--manage_package"></a>`manage_package`
+
+Data type: `Optional[Boolean]`
+
+Install collectd-modbus package? Currently supports RedHat and Debian os family.
+
+Default value: `undef`
+
+##### <a name="-collectd--plugin--modbus--data"></a>`data`
+
+Data type: `Hash[String[1], Collectd::Modbus::Data]`
+
+modbus data entries
+
+Default value: `{}`
+
+##### <a name="-collectd--plugin--modbus--hosts"></a>`hosts`
+
+Data type: `Hash[String[1], Collectd::Modbus::Host]`
+
+modbus host entries
+
+Default value: `{}`
 
 ### <a name="collectd--plugin--mongodb"></a>`collectd::plugin::mongodb`
 
@@ -10311,6 +10363,65 @@ Struct[{
 The Collectd::Manifests::Init data type.
 
 Alias of `Pattern[/(^5.4|^5.5|^5.6|^5.7|^5.8|^master)/]`
+
+### <a name="Collectd--Modbus--Data"></a>`Collectd::Modbus::Data`
+
+https://github.com/collectd/collectd/blob/main/src/modbus.c
+
+Alias of
+
+```puppet
+Struct[{
+    Optional['instance']      => String,
+    NotUndef['type']          => String[1],
+    NotUndef['register_base'] => Integer[0],
+    NotUndef['register_type'] => Enum[
+      'Int16',
+      'Int32',
+      'Int32LE',
+      'Uint16',
+      'Uint32',
+      'Uint32LE',
+      'Float',
+      'FloatLE',
+      'Uint64',
+      'Int64',
+      'Double',
+    ],
+    Optional['register_cmd']  => Enum['ReadHolding', 'ReadInput'],
+}]
+```
+
+### <a name="Collectd--Modbus--Host"></a>`Collectd::Modbus::Host`
+
+represents a modbus host entry
+
+Alias of
+
+```puppet
+Struct[{
+    NotUndef['address'] => String[1],
+    NotUndef['port'] => Stdlib::Port,
+    NotUndef['slaves'] => Hash[Integer, Collectd::Modbus::Slave],
+    Optional['interval'] => Integer[0]
+}]
+```
+
+### <a name="Collectd--Modbus--Slave"></a>`Collectd::Modbus::Slave`
+
+Represents a modbus host's slave entry
+
+Alias of
+
+```puppet
+Struct[{
+    NotUndef['instance'] => String[1],
+    NotUndef['collect'] => Variant[
+      String[1],
+      Array[String[1], 1]
+    ]
+}]
+```
 
 ### <a name="Collectd--Network--SecurityLevel"></a>`Collectd::Network::SecurityLevel`
 
