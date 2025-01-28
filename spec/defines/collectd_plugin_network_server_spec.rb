@@ -43,6 +43,19 @@ describe 'collectd::plugin::network::server', type: :define do
           is_expected.to contain_file("#{options[:plugin_conf_dir]}/network-server-node1.conf").with(ensure: 'absent')
         end
       end
+
+      context 'with specifique title' do
+        let(:title) { 'eatapples' }
+        let :params do
+          { server: '10.0.0.1', port: 1234 }
+        end
+
+        it do
+          is_expected.to contain_file(
+            "#{options[:plugin_conf_dir]}/network-server-eatapples.conf"
+          ).with_content(%r{<Server "10\.0\.0\.1" "1234">\n})
+        end
+      end
     end
   end
 end

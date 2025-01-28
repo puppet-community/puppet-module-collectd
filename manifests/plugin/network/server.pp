@@ -8,6 +8,7 @@ define collectd::plugin::network::server (
   Optional[String] $interface                               = undef,
   Optional[Boolean] $forward                                = undef,
   Optional[Integer[1]] $resolveinterval                     = undef,
+  String[1] $server                                         = $name,
 ) {
   include collectd
   include collectd::plugin::network

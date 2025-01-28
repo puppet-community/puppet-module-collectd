@@ -1,6 +1,6 @@
 <Plugin network>
 <% if scope.lookupvar('collectd::collectd_version_real') and (scope.function_versioncmp([scope.lookupvar('collectd::collectd_version_real'), '4.7']) >= 0) -%>
-  <Server "<%= @name %>" "<%= @port %>">
+  <Server "<%= @server %>" "<%= @port %>">
 <% if @securitylevel -%>
     SecurityLevel "<%= @securitylevel %>"
 <% end -%>
@@ -18,7 +18,7 @@
 <% end %>
   </Server>
 <% else -%>
-  Server "<%= @name %>" "<%= @port %>"
+  Server "<%= @server %>" "<%= @port %>"
 <% end -%>
 <% if ! @forward.nil? -%>
   Forward <%= @forward %>
